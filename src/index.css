@@ -19,9 +19,10 @@
   --line-strong: #c3c2b7;
 
   /* identidade Rocha & Rocha */
-  --brand:       #1f3864;
-  --brand-2:     #2c4d87;
+  --brand:       #050c37;   /* fim do degradê (mais escuro) */
+  --brand-2:     #07017a;   /* início do degradê (mais vivo)  */
   --brand-ink:   #ffffff;
+  --brand-degrade: linear-gradient(var(--brand-2) 0%, var(--brand) 100%);
 
   /* categóricas (ordem fixa, nunca ciclada) */
   --series-1:    #2a78d6;
@@ -53,9 +54,10 @@
   --line:        #2c2c2a;
   --line-strong: #383835;
 
-  --brand:       #15243f;
-  --brand-2:     #24406e;
+  --brand:       #050c37;
+  --brand-2:     #07017a;
   --brand-ink:   #ffffff;
+  --brand-degrade: linear-gradient(var(--brand-2) 0%, var(--brand) 100%);
 
   --series-1:    #3987e5;
   --series-2:    #d95926;
@@ -181,7 +183,7 @@
     transition: filter .12s ease, background .12s ease;
   }
   .btn:disabled { opacity: .55; cursor: not-allowed; }
-  .btn-primary { background: var(--brand); color: var(--brand-ink); }
+  .btn-primary { background: var(--brand-degrade); color: var(--brand-ink); }
   .btn-primary:hover:not(:disabled) { filter: brightness(1.15); }
   .btn-ghost { background: var(--surface); color: var(--ink); border-color: var(--line); }
   .btn-ghost:hover:not(:disabled) { background: var(--surface-2); border-color: var(--line-strong); }

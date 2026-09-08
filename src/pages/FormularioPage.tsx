@@ -105,7 +105,7 @@ export function FormularioPage() {
       {/* a coluna estica com a linha do grid; o conteúdo dentro dela é que fica fixo */}
       <aside
         className="relative lg:min-h-screen"
-        style={{ background: 'var(--brand)', color: 'var(--brand-ink)' }}
+        style={{ background: 'var(--brand-degrade)', color: 'var(--brand-ink)' }}
       >
         {/*
           A foto fica nesta camada, que tem altura fixa (a da tela no desktop,
@@ -117,9 +117,10 @@ export function FormularioPage() {
           className="flex min-h-full flex-col justify-between gap-10 px-7 py-9 lg:sticky lg:top-0 lg:h-screen lg:min-h-0 lg:gap-0 lg:px-10 lg:py-12"
           style={{
             backgroundImage: [
-              `linear-gradient(155deg,
-                 color-mix(in srgb, var(--brand) 93%, transparent) 0%,
-                 color-mix(in srgb, var(--brand-2) 84%, transparent) 48%,
+              // o degradê da marca com transparência: a foto atravessa como
+              // textura e o branco mantém contraste bem acima de 4.5:1
+              `linear-gradient(
+                 color-mix(in srgb, var(--brand-2) 88%, transparent) 0%,
                  color-mix(in srgb, var(--brand) 95%, transparent) 100%)`,
               `url(${import.meta.env.BASE_URL}fachada.jpg)`,
             ].join(', '),

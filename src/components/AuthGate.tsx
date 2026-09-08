@@ -23,7 +23,7 @@ export function AuthGate({ children }: { children: React.ReactNode }) {
     return (
       <div className="grid min-h-screen place-items-center px-4">
         <div className="card w-full max-w-[520px] p-6">
-          <p className="text-[12px] font-semibold tracking-wide uppercase" style={{ color: 'var(--brand-2)' }}>
+          <p className="text-[12px] font-semibold tracking-wide uppercase" style={{ color: 'var(--series-1)' }}>
             Rocha &amp; Rocha
           </p>
           <h1 className="mt-1 mb-4 text-[19px] font-semibold">Falta configurar o Supabase</h1>
@@ -61,7 +61,7 @@ export function AuthGate({ children }: { children: React.ReactNode }) {
   return (
     <div className="grid min-h-screen place-items-center px-4">
       <form onSubmit={entrar} className="card w-full max-w-[360px] p-6">
-        <p className="text-[12px] font-semibold tracking-wide uppercase" style={{ color: 'var(--brand-2)' }}>
+        <p className="text-[12px] font-semibold tracking-wide uppercase" style={{ color: 'var(--series-1)' }}>
           Rocha &amp; Rocha
         </p>
         <h1 className="mt-1 text-[19px] font-semibold">Painéis internos</h1>

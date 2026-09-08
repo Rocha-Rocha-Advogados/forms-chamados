@@ -22,7 +22,7 @@ export function AppShell() {
           'no-print fixed inset-y-0 left-0 z-40 flex w-[236px] flex-col transition-transform lg:static lg:translate-x-0',
           aberto ? 'translate-x-0' : '-translate-x-full',
         )}
-        style={{ background: 'var(--brand)', color: 'var(--brand-ink)' }}
+        style={{ background: 'var(--brand-degrade)', color: 'var(--brand-ink)' }}
       >
         <div className="px-5 pt-5 pb-4">
           <p className="text-[15px] font-semibold tracking-tight">ROCHA &amp; ROCHA</p>

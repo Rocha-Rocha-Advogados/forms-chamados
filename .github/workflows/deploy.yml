@@ -18,6 +18,10 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    # Declarar o ambiente é o que dá acesso às variáveis dele. Sem isto,
+    # as variáveis criadas em Environments → github-pages chegam vazias
+    # no build e o app abre avisando que falta configurar o Supabase.
+    environment: github-pages
     steps:
       - uses: actions/checkout@v4
 
@@ -28,15 +32,24 @@ jobs:
 
       - run: npm ci
 
-      # O .env não vai para o repositório, então as variáveis vêm daqui:
-      # Settings → Secrets and variables → Actions
-      #   Variables: VITE_SUPABASE_URL
-      #   Secrets:   VITE_SUPABASE_ANON_KEY
-      # Sem elas o build passa, mas o app abre avisando que falta configurar.
+      # O .env não vai para o repositório: as duas variáveis vêm de
+      # Settings → Environments → github-pages → Environment variables.
+      # A chave anon pode ser variável em vez de secret sem prejuízo —
+      # ela vai publicada no JavaScript do site de qualquer forma; quem
+      # protege os dados é o RLS, não o sigilo dela.
       - run: npm run build
         env:
           VITE_SUPABASE_URL: ${{ vars.VITE_SUPABASE_URL }}
-          VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
+          VITE_SUPABASE_ANON_KEY: ${{ vars.VITE_SUPABASE_ANON_KEY }}
+
+      # falha cedo e com mensagem clara, em vez de publicar um app quebrado
+      - name: Conferir que as variáveis chegaram
+        run: |
+          test -s dist/index.html || { echo '::error::build não gerou dist/index.html'; exit 1; }
+          if grep -rqF 'placeholder.supabase.co' dist/assets; then
+            echo '::error::VITE_SUPABASE_URL/ANON_KEY não chegaram ao build — confira Settings → Environments → github-pages → Environment variables'
+            exit 1
+          fi
 
       - uses: actions/configure-pages@v5
 

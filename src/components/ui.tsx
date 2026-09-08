@@ -170,11 +170,16 @@ export function SelectInput({
   placeholder,
   ...props
 }: SelectHTMLAttributes<HTMLSelectElement> & { options: readonly string[]; placeholder?: string }) {
+  const vazio = !props.value
   return (
-    <select {...props} className={cn('field', props.className)}>
+    <select
+      {...props}
+      className={cn('field', props.className)}
+      style={{ color: vazio ? 'var(--muted)' : undefined, ...props.style }}
+    >
       {placeholder !== undefined && <option value="">{placeholder}</option>}
       {options.filter(Boolean).map((opt) => (
-        <option key={opt} value={opt}>
+        <option key={opt} value={opt} style={{ color: 'var(--ink)' }}>
           {opt}
         </option>
       ))}

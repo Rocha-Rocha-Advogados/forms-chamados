@@ -122,13 +122,43 @@
   .field:hover:not(:disabled) { border-color: var(--line-strong); }
   .field:focus { border-color: var(--series-1); background: var(--surface); outline: none; }
   .field[aria-invalid="true"] { border-color: var(--critical); }
-  select.field { appearance: none; padding-right: 30px;
-    background-image: linear-gradient(45deg, transparent 50%, var(--muted) 50%),
-                      linear-gradient(135deg, var(--muted) 50%, transparent 50%);
-    background-position: calc(100% - 16px) 51%, calc(100% - 11px) 51%;
-    background-size: 5px 5px, 5px 5px;
+  /* Seta própria em SVG: nítida em qualquer zoom e com cor fixa, para não
+     herdar o verde do texto quando a célula marca "concluído". */
+  select.field,
+  select.cell {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' fill='none' stroke='%23898781' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M2.5 4.5 6 8l3.5-3.5'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
+    cursor: pointer;
+    text-overflow: ellipsis;
   }
+  select.field {
+    padding-right: 32px;
+    background-position: right 11px center;
+    background-size: 11px 11px;
+  }
+  select.cell {
+    padding-right: 21px;
+    background-position: right 5px center;
+    background-size: 10px 10px;
+    /* largura pelo conteúdo: ocupando a célula toda, a seta ficava a
+       um vão enorme do valor. O mínimo garante alvo de clique quando
+       a célula está vazia. */
+    width: auto;
+    min-width: 76px;
+    max-width: 100%;
+  }
+
+  /* o seletor de data nativo fica discreto e junto do valor */
+  input[type='date'].cell,
+  input[type='date'].field { cursor: text; }
+  input[type='date']::-webkit-calendar-picker-indicator {
+    opacity: 0.45;
+    cursor: pointer;
+    padding: 0;
+    margin-left: 2px;
+  }
+  input[type='date']:hover::-webkit-calendar-picker-indicator { opacity: 0.8; }
 
   /* célula de planilha: só ganha moldura no hover/foco */
   .cell {

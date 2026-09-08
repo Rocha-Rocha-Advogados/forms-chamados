@@ -2,7 +2,7 @@ import { PERIODOS, contarAtivos, type Filtros } from '../lib/filtros'
 import { SelectInput, TextInput } from './ui'
 
 const SITUACOES = [
-  { id: '', label: 'Todas as situações' },
+  { id: '', label: 'Situação' },
   { id: 'abertos', label: 'Em aberto' },
   { id: 'resolvidos', label: 'Resolvidos' },
   { id: 'sem-triagem', label: 'Aguardando triagem' },
@@ -37,7 +37,7 @@ export function FiltroBar({
   return (
     <div className="no-print card mb-4 p-3">
       <div className="flex flex-wrap items-center gap-2">
-        <div className="min-w-[190px] grow sm:max-w-[300px]">
+        <div className="min-w-[170px] flex-1 basis-[190px] sm:max-w-[260px]">
           <TextInput
             type="search"
             value={filtros.busca}
@@ -48,7 +48,7 @@ export function FiltroBar({
         </div>
 
         <select
-          className="field w-auto"
+          className="field min-w-0 flex-1 basis-[150px] max-w-[210px]"
           value={filtros.periodo}
           onChange={(e) => set('periodo', e.target.value as Filtros['periodo'])}
           aria-label="Período"
@@ -61,7 +61,8 @@ export function FiltroBar({
         </select>
 
         <select
-          className="field w-auto"
+          className="field min-w-0 flex-1 basis-[150px] max-w-[210px]"
+          style={{ color: filtros.situacao ? undefined : 'var(--muted)' }}
           value={filtros.situacao}
           onChange={(e) => set('situacao', e.target.value as Filtros['situacao'])}
           aria-label="Situação"
@@ -74,33 +75,33 @@ export function FiltroBar({
         </select>
 
         <SelectInput
-          className="w-auto"
+          className="min-w-0 flex-1 basis-[150px] max-w-[210px]"
           options={urgencias}
-          placeholder="Toda urgência"
+          placeholder="Urgência"
           value={filtros.urgencia}
           onChange={(e) => set('urgencia', e.target.value)}
           aria-label="Urgência"
         />
         <SelectInput
-          className="w-auto"
+          className="min-w-0 flex-1 basis-[150px] max-w-[210px]"
           options={naturezas}
-          placeholder="Toda natureza"
+          placeholder="Natureza"
           value={filtros.natureza}
           onChange={(e) => set('natureza', e.target.value)}
           aria-label="Natureza"
         />
         <SelectInput
-          className="w-auto"
+          className="min-w-0 flex-1 basis-[150px] max-w-[210px]"
           options={destinos}
-          placeholder="Todo encaminhamento"
+          placeholder="Encaminhamento"
           value={filtros.destino}
           onChange={(e) => set('destino', e.target.value)}
           aria-label="Encaminhado para"
         />
         <SelectInput
-          className="w-auto"
+          className="min-w-0 flex-1 basis-[150px] max-w-[210px]"
           options={responsaveis}
-          placeholder="Todo responsável"
+          placeholder="Responsável"
           value={filtros.responsavel}
           onChange={(e) => set('responsavel', e.target.value)}
           aria-label="Responsável pelo atendimento"
@@ -116,12 +117,13 @@ export function FiltroBar({
           </button>
         )}
 
-        <div className="ml-auto flex items-center gap-2">
-          <span className="tnum text-[12.5px] text-muted">
-            {exibidos === total ? `${total} chamados` : `${exibidos} de ${total} chamados`}
-          </span>
-          {acoes}
-        </div>
+      </div>
+
+      <div className="mt-2 flex items-center justify-end gap-2">
+        <span className="tnum text-[12.5px] text-muted">
+          {exibidos === total ? `${total} chamados` : `${exibidos} de ${total} chamados`}
+        </span>
+        {acoes}
       </div>
     </div>
   )

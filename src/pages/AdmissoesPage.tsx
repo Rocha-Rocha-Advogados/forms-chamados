@@ -219,7 +219,7 @@ export function AdmissoesPage() {
                 placeholder="Buscar colaborador, máquina, chamado…"
                 aria-label="Buscar admissões"
               />
-              <select className="field w-auto" value={situacao} onChange={(e) => setSituacao(e.target.value)} aria-label="Situação">
+              <select className="field w-[190px]" value={situacao} onChange={(e) => setSituacao(e.target.value)} aria-label="Situação">
                 <option value="">Todas</option>
                 <option value="pendentes">Com pendência</option>
                 <option value="concluidos">Concluídos</option>

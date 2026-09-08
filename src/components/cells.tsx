@@ -40,6 +40,7 @@ export function CellText({
       type={type}
       list={list}
       aria-label={ariaLabel}
+      title={focado ? undefined : (value ?? '')}
       className={cn('cell', className)}
       placeholder={placeholder}
       value={rascunho}

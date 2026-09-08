@@ -1,13 +1,12 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { supabase, supabaseConfigured } from '../lib/supabase'
-import { EQUIPAMENTOS, NATUREZAS, SETORES, URGENCIAS, URGENCIA_COLOR, URGENCIA_ICON } from '../lib/options'
-import { Field, RadioCards, SelectInput, TextArea, TextInput, ErrorBanner } from '../components/ui'
+import { EQUIPAMENTOS, NATUREZAS, URGENCIAS, URGENCIA_COLOR, URGENCIA_ICON } from '../lib/options'
+import { Field, RadioCards, TextArea, TextInput, ErrorBanner } from '../components/ui'
 import { useTheme } from '../hooks/useTheme'
 
 type Form = {
   colaborador: string
-  setor: string
   email: string
   natureza: string
   equipamento: string
@@ -18,7 +17,6 @@ type Form = {
 
 const VAZIO: Form = {
   colaborador: '',
-  setor: '',
   email: '',
   natureza: '',
   equipamento: '',
@@ -87,7 +85,6 @@ export function FormularioPage() {
     setEnviando(true)
     const { error } = await supabase.from('chamados').insert({
       colaborador: form.colaborador.trim(),
-      setor: form.setor || null,
       email: form.email.trim() || null,
       natureza: form.natureza,
       equipamento: pedeEquipamento ? form.equipamento : null,
@@ -105,22 +102,30 @@ export function FormularioPage() {
       {/* ------------------------------------------------------- capa (marca) */}
       {/* a coluna estica com a linha do grid; o conteúdo dentro dela é que fica fixo */}
       <aside
-        className="relative overflow-hidden lg:min-h-screen"
-        style={{
-          backgroundImage: [
-            `linear-gradient(155deg,
-               color-mix(in srgb, var(--brand) 93%, transparent) 0%,
-               color-mix(in srgb, var(--brand-2) 84%, transparent) 48%,
-               color-mix(in srgb, var(--brand) 95%, transparent) 100%)`,
-            'url(/fachada.jpg)',
-          ].join(', '),
-          backgroundSize: 'cover, cover',
-          backgroundPosition: 'center, center 32%',
-          backgroundRepeat: 'no-repeat, no-repeat',
-          color: 'var(--brand-ink)',
-        }}
+        className="relative lg:min-h-screen"
+        style={{ background: 'var(--brand)', color: 'var(--brand-ink)' }}
       >
-        <div className="flex min-h-full flex-col justify-between gap-10 px-7 py-9 lg:sticky lg:top-0 lg:h-screen lg:gap-0 lg:px-10 lg:py-12">
+        {/*
+          A foto fica nesta camada, que tem altura fixa (a da tela no desktop,
+          a do próprio conteúdo no celular). Se ela ficasse no <aside>, cada
+          pergunta que abre no formulário esticaria a coluna e o `cover`
+          reescalaria a imagem — a foto "pulava" a cada resposta.
+        */}
+        <div
+          className="flex min-h-full flex-col justify-between gap-10 px-7 py-9 lg:sticky lg:top-0 lg:h-screen lg:min-h-0 lg:gap-0 lg:px-10 lg:py-12"
+          style={{
+            backgroundImage: [
+              `linear-gradient(155deg,
+                 color-mix(in srgb, var(--brand) 93%, transparent) 0%,
+                 color-mix(in srgb, var(--brand-2) 84%, transparent) 48%,
+                 color-mix(in srgb, var(--brand) 95%, transparent) 100%)`,
+              'url(/fachada.jpg)',
+            ].join(', '),
+            backgroundSize: 'cover, cover',
+            backgroundPosition: 'center, center 32%',
+            backgroundRepeat: 'no-repeat, no-repeat',
+          }}
+        >
         <div className="relative">
           <p className="text-[12px] font-semibold tracking-[0.18em] uppercase opacity-80">Rocha &amp; Rocha</p>
           <p className="text-[11px] tracking-[0.3em] uppercase opacity-50">Advogados</p>
@@ -174,7 +179,7 @@ export function FormularioPage() {
                   type="button"
                   className="btn btn-primary"
                   onClick={() => {
-                    setForm({ ...VAZIO, colaborador: form.colaborador, setor: form.setor, email: form.email })
+                    setForm({ ...VAZIO, colaborador: form.colaborador, email: form.email })
                     setEnviado(false)
                   }}
                 >
@@ -197,7 +202,7 @@ export function FormularioPage() {
 
               <div className="grid gap-7">
                 <Question numero={1} titulo="Quem está solicitando?" obrigatorio>
-                  <div className="grid gap-3.5 sm:grid-cols-2">
+                  <div className="grid gap-3.5">
                     <Field label="Nome completo" required error={erros.colaborador}>
                       <TextInput
                         value={form.colaborador}
@@ -207,26 +212,16 @@ export function FormularioPage() {
                         autoComplete="name"
                       />
                     </Field>
-                    <Field label="Setor">
-                      <SelectInput
-                        options={SETORES}
-                        placeholder="Selecione"
-                        value={form.setor}
-                        onChange={(e) => set('setor', e.target.value)}
+                    <Field label="E-mail corporativo" hint="Opcional — usado para retorno do atendimento." error={erros.email}>
+                      <TextInput
+                        type="email"
+                        value={form.email}
+                        onChange={(e) => set('email', e.target.value)}
+                        aria-invalid={Boolean(erros.email)}
+                        placeholder="nome@rocharocha.adv.br"
+                        autoComplete="email"
                       />
                     </Field>
-                    <div className="sm:col-span-2">
-                      <Field label="E-mail corporativo" hint="Opcional — usado para retorno do atendimento." error={erros.email}>
-                        <TextInput
-                          type="email"
-                          value={form.email}
-                          onChange={(e) => set('email', e.target.value)}
-                          aria-invalid={Boolean(erros.email)}
-                          placeholder="nome@rocharocha.adv.br"
-                          autoComplete="email"
-                        />
-                      </Field>
-                    </div>
                   </div>
                 </Question>
 

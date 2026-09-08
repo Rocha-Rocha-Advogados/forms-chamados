@@ -188,7 +188,6 @@ export function TriagemPage() {
                       <Td className="tnum whitespace-nowrap text-ink-2">{fmtDateTime(c.created_at)}</Td>
                       <Td className="font-medium">
                         {c.colaborador}
-                        {c.setor && <span className="block text-[11.5px] text-muted">{c.setor}</span>}
                       </Td>
                       <Td className="text-ink-2">
                         {c.natureza}

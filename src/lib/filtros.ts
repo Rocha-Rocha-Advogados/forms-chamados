@@ -56,7 +56,6 @@ export function aplicarFiltros(rows: Chamado[], f: Filtros) {
       !buscaEm(
         f.busca,
         c.colaborador,
-        c.setor,
         c.natureza,
         c.equipamento,
         c.sistema,

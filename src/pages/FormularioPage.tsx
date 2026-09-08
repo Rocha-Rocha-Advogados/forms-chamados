@@ -116,7 +116,7 @@ export function FormularioPage() {
                  color-mix(in srgb, var(--brand) 93%, transparent) 0%,
                  color-mix(in srgb, var(--brand-2) 84%, transparent) 48%,
                  color-mix(in srgb, var(--brand) 95%, transparent) 100%)`,
-              'url(/fachada.jpg)',
+              `url(${import.meta.env.BASE_URL}fachada.jpg)`,
             ].join(', '),
             backgroundSize: 'cover, cover',
             backgroundPosition: 'center, center 32%',

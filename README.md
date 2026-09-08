@@ -60,6 +60,31 @@ npm run build    # gera dist/
 npm run preview  # serve o dist/
 ```
 
+## 3. Publicar no GitHub Pages
+
+O site fica em `https://rocha-rocha-advogados.github.io/forms-chamados/`, publicado pelo workflow
+[`.github/workflows/deploy.yml`](.github/workflows/deploy.yml) a cada push na `main`.
+
+Três coisas precisam estar no lugar:
+
+1. **Settings → Pages → Source: GitHub Actions.** Se ficar em "Deploy from a branch", o Pages serve
+   os arquivos crus do repositório — inclusive o `index.html` de desenvolvimento, que pede
+   `/src/main.tsx` e não existe no servidor. Resultado: página branca na raiz e 404 nas rotas.
+2. **Settings → Secrets and variables → Actions:** `VITE_SUPABASE_URL` em *Variables* e
+   `VITE_SUPABASE_ANON_KEY` em *Secrets*. O `.env` não vai para o repositório, então o build lê daí.
+3. Nada mais — o `vite.config.ts` já publica no subcaminho `/forms-chamados/` e gera um `404.html`
+   igual ao `index.html`, que é como um app de rota única sobrevive no Pages: o Pages entrega o
+   `404.html` para qualquer caminho que não exista em disco, e o roteador assume dali.
+
+> ### O site do Pages é público
+>
+> Qualquer pessoa na internet abre esse endereço, e a chave anon vai dentro do JavaScript da página
+> — é assim que o Supabase funciona no navegador. **A única coisa que separa os dados do mundo são
+> as policies de RLS.** Enquanto elas exigirem sessão (é o que o `schema.sql` faz), a chave sozinha
+> não devolve nada e a senha da equipe é o que abre a porta. Se em algum momento a leitura for
+> liberada para `anon`, os chamados, admissões e desligamentos — com nome, e-mail e descrição de
+> problema de cada colaborador — ficam legíveis por qualquer um, sem senha.
+
 ## Como o fluxo funciona
 
 ```

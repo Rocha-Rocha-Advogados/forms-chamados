@@ -96,6 +96,9 @@ Formulário (/)  ──insert──▶  tabela chamados  ──▶  Painel Chama
                                    └──update──  Painel Triagem (encaminhamento e situação)
 ```
 
+- **E-mail corporativo obrigatório**, e só do domínio `rocharocha.adv.br`. A regra vale no
+  formulário e também no banco: o endpoint de insert é aberto para `anon`, então quem postar direto
+  na API não passa com endereço de fora (registros antigos, sem e-mail, continuam válidos).
 - **Uma tabela só** (`chamados`) alimenta as duas planilhas: a primeira mostra as respostas do
   formulário, a segunda edita as colunas de atendimento. Nada de cópia entre abas.
 - **Atualização sem recarregar a tela.** Só a primeira carga mostra "carregando"; depois disso nada

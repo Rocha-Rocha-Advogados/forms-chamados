@@ -13,6 +13,9 @@ type Form = {
   urgencia: string
 }
 
+const DOMINIO = 'rocharocha.adv.br'
+const EMAIL_CORPORATIVO = new RegExp(`^[^\\s@]+@${DOMINIO.replace(/\./g, '\\.')}$`, 'i')
+
 const VAZIO: Form = {
   colaborador: '',
   email: '',
@@ -63,7 +66,9 @@ export function FormularioPage() {
     if (pedeSistema && !form.sistema.trim()) e.sistema = 'Informe o sistema ou aplicativo.'
     if (form.descricao.trim().length < 10) e.descricao = 'Descreva o problema com pelo menos 10 caracteres.'
     if (!form.urgencia) e.urgencia = 'Selecione a urgência.'
-    if (form.email.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())) e.email = 'E-mail inválido.'
+    const email = form.email.trim()
+    if (!email) e.email = 'Informe seu e-mail corporativo.'
+    else if (!EMAIL_CORPORATIVO.test(email)) e.email = `Use seu e-mail @${DOMINIO}.`
     setErros(e)
     return Object.keys(e).length === 0
   }
@@ -82,7 +87,7 @@ export function FormularioPage() {
     setEnviando(true)
     const { error } = await supabase.from('chamados').insert({
       colaborador: form.colaborador.trim(),
-      email: form.email.trim() || null,
+      email: form.email.trim().toLowerCase(),
       natureza: form.natureza,
       equipamento: pedeEquipamento ? form.equipamento : null,
       sistema: pedeSistema ? form.sistema.trim() : null,
@@ -199,9 +204,15 @@ export function FormularioPage() {
                         autoComplete="name"
                       />
                     </Field>
-                    <Field label="E-mail corporativo" hint="Opcional — usado para retorno do atendimento." error={erros.email}>
+                    <Field
+                      label="E-mail corporativo"
+                      required
+                      hint={`Precisa ser o seu endereço @${DOMINIO} — é por ele que o atendimento te procura.`}
+                      error={erros.email}
+                    >
                       <TextInput
                         type="email"
+                        required
                         value={form.email}
                         onChange={(e) => set('email', e.target.value)}
                         aria-invalid={Boolean(erros.email)}

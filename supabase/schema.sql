@@ -150,7 +150,19 @@ select
 from public.chamados;
 
 -- ---------------------------------------------------------------------
--- 5. TEMPO REAL
+-- 5. DOMÍNIO DO E-MAIL
+--    O formulário exige o e-mail corporativo, mas o endpoint de insert
+--    é aberto (anon), então a regra também vale no banco: quem postar
+--    direto na API não passa com endereço de fora.
+--    Nulo continua aceito por causa dos registros migrados da planilha,
+--    que não traziam e-mail.
+-- ---------------------------------------------------------------------
+alter table public.chamados drop constraint if exists chamados_email_dominio;
+alter table public.chamados add constraint chamados_email_dominio
+  check (email is null or email ~* '^[^@[:space:]]+@rocharocha\.adv\.br$');
+
+-- ---------------------------------------------------------------------
+-- 6. TEMPO REAL
 --    Sem entrar nesta publicação, o Supabase não emite eventos e os
 --    painéis só atualizam quando alguém recarrega a página.
 --    (Equivale a ligar "Realtime" na tabela pelo painel do Supabase.)
@@ -174,7 +186,7 @@ begin
 end $$;
 
 -- ---------------------------------------------------------------------
--- 6. RLS
+-- 7. RLS
 --    O formulário é público (anon INSERT em chamados).
 --    Leitura/edição dos painéis exige usuário autenticado.
 --    >>> Para usar sem login, troque `to authenticated` por `to anon, authenticated`.

@@ -178,7 +178,7 @@ export function AdmissoesPage() {
           label="Checklist pendente"
           value={dados.length - concluidos.length}
           accent="var(--warning)"
-          icon="◐"
+          icon="●"
           hint="Alguma etapa em aberto"
         />
         <StatTile label="Prontos" value={concluidos.length} accent="var(--good)" icon="✓" hint="Checklist completo" />

@@ -6,6 +6,10 @@
 -- app veja e edite todos os chamados, admissões e desligamentos —
 -- inclusive nome, e-mail e descrição de problema dos colaboradores.
 --
+-- ATENÇÃO: com estas policies no ar, a senha da equipe deixa de proteger
+-- qualquer coisa. A chave anônima vai publicada no JavaScript do site, e
+-- com ela dá para ler a base inteira sem passar pela tela de senha.
+--
 -- Para voltar ao modo com login: rode de novo o bloco de RLS do
 -- schema.sql (as policies têm o mesmo nome e são substituídas) e ponha
 -- VITE_REQUIRE_AUTH=true no .env.

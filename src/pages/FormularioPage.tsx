@@ -1,9 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { Link } from 'react-router-dom'
 import { supabase, supabaseConfigured } from '../lib/supabase'
 import { EQUIPAMENTOS, NATUREZAS, URGENCIAS, URGENCIA_COLOR, URGENCIA_ICON } from '../lib/options'
 import { Field, RadioCards, TextArea, TextInput, ErrorBanner } from '../components/ui'
-import { useTheme } from '../hooks/useTheme'
 
 type Form = {
   colaborador: string
@@ -26,7 +24,6 @@ const VAZIO: Form = {
 }
 
 export function FormularioPage() {
-  const { theme, toggle } = useTheme()
   const [form, setForm] = useState<Form>(VAZIO)
   const [erros, setErros] = useState<Partial<Record<keyof Form, string>>>({})
   const [enviando, setEnviando] = useState(false)
@@ -142,17 +139,10 @@ export function FormularioPage() {
           </p>
         </div>
 
-        <div className="relative mt-10 flex items-center gap-4 lg:mt-0">
-          <button
-            type="button"
-            onClick={toggle}
-            className="rounded-lg border border-white/25 px-3 py-1.5 text-[12px] font-medium hover:bg-white/10"
-          >
-            {theme === 'light' ? '◐ Tema escuro' : '◑ Tema claro'}
-          </button>
-          <Link to="/painel/chamados" className="text-[12px] font-medium underline decoration-white/40 hover:opacity-80">
-            Acesso da equipe de TI
-          </Link>
+        <div className="relative mt-10 lg:mt-0">
+          <p className="text-[12px] leading-relaxed opacity-60">
+            Chamados abertos por aqui vão direto para a fila de triagem da equipe de TI.
+          </p>
           </div>
         </div>
       </aside>

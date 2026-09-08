@@ -13,16 +13,17 @@ export default function App() {
       {/* público — quem abre o chamado */}
       <Route path="/" element={<FormularioPage />} />
 
-      {/* interno — equipe de TI */}
+      {/* interno — equipe de TI. Rota separada e não divulgada: o formulário
+          público não aponta para cá, só se chega digitando o endereço. */}
       <Route
-        path="/painel"
+        path="/interno"
         element={
           <AuthGate>
             <AppShell />
           </AuthGate>
         }
       >
-        <Route index element={<Navigate to="/painel/chamados" replace />} />
+        <Route index element={<Navigate to="/interno/chamados" replace />} />
         <Route path="chamados" element={<ChamadosPage />} />
         <Route path="triagem" element={<TriagemPage />} />
         <Route path="admissoes" element={<AdmissoesPage />} />

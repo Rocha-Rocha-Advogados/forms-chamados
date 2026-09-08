@@ -5,10 +5,13 @@ Substitui o Forms + planilha do Excel por um app em **React + Vite + Supabase**:
 | Rota | O que é | Acesso |
 |---|---|---|
 | `/` | Formulário de solicitação de suporte (com ramificação de perguntas) | público |
-| `/painel/chamados` | **Planilha 1** — tudo que entra pelo formulário, com filtros e gráficos | equipe de TI |
-| `/painel/triagem` | **Planilha 2** — encaminhamento, reencaminhamento, responsável, triagem, resolvido e observações (edição na célula) | equipe de TI |
-| `/painel/admissoes` | Checklist de admissão (equipamentos, acessos, licenças) | equipe de TI |
-| `/painel/desligamentos` | Checklist de desligamento (backup, recolhimento, licenças) | equipe de TI |
+| `/interno/chamados` | **Planilha 1** — tudo que entra pelo formulário, com filtros e gráficos | senha da equipe |
+| `/interno/triagem` | **Planilha 2** — encaminhamento, responsável, triagem, resolvido e observações (edição na célula) | senha da equipe |
+| `/interno/admissoes` | Checklist de admissão (equipamentos, acessos, licenças) | senha da equipe |
+| `/interno/desligamentos` | Checklist de desligamento (backup, recolhimento, licenças) | senha da equipe |
+
+O formulário público **não tem link** para a área interna: só se chega a `/interno/...`
+digitando o endereço, e ali é preciso a senha da equipe.
 
 ## 1. Configurar o Supabase
 
@@ -26,8 +29,15 @@ VITE_SUPABASE_ANON_KEY=cole-a-chave-anon-aqui
 VITE_REQUIRE_AUTH=true
 ```
 
-4. Crie os usuários da equipe em **Authentication → Users** (e-mail + senha). Só eles enxergam os painéis;
-   o formulário público não pede login e só consegue **inserir** chamados.
+4. **Senha da equipe.** Os painéis usam uma conta única do Supabase Auth: o endereço fica em
+   `VITE_EQUIPE_EMAIL` no `.env` e a senha é digitada na tela de acesso. Para criar ou trocar,
+   vá em **Authentication → Users** (ao criar, marque *Auto Confirm User*, senão a conta só entra
+   depois de confirmar o e-mail).
+
+   A senha entra numa conta de verdade em vez de ser comparada aqui no navegador de propósito:
+   comparada no navegador, ela viajaria dentro do JavaScript da página e o RLS teria de liberar
+   leitura para a chave anônima — qualquer pessoa com o endereço leria os chamados de todo mundo.
+   Do jeito atual, sem a senha certa não sai sessão, e sem sessão o banco não devolve nada.
 
 > **Painéis sem login?** Ponha `VITE_REQUIRE_AUTH=false` no `.env` **e** rode
 > `supabase/policies-sem-login.sql`. As duas coisas juntas — só desligar a flag do app não basta: o
@@ -79,7 +89,8 @@ Formulário (/)  ──insert──▶  tabela chamados  ──▶  Painel Chama
 
 - Paleta de gráficos validada para daltonismo e contraste; urgência sempre traz **ícone + rótulo**
   junto da cor, e todo gráfico tem botão **"Ver tabela"**.
-- Tema claro/escuro seguindo o sistema, com alternância manual (fica salvo no navegador).
+- Tema escuro único. Os tokens do tema claro continuam no `index.css`, inertes, se um dia quiser
+  reativar a alternância.
 - Edição em planilha grava no `blur`/Enter, com atualização otimista: se o servidor recusar, o valor
   anterior volta e o erro aparece.
 

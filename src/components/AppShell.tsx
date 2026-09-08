@@ -1,19 +1,17 @@
 import { useState } from 'react'
 import { NavLink, Outlet } from 'react-router-dom'
-import { useTheme } from '../hooks/useTheme'
 import { useAuth } from '../hooks/useAuth'
 import { requireAuth } from '../lib/supabase'
 import { cn } from '../lib/utils'
 
 const NAV = [
-  { to: '/painel/chamados', label: 'Chamados', icon: '▤', hint: 'Planilha 1 · gráficos e filtros' },
-  { to: '/painel/triagem', label: 'Triagem', icon: '⇄', hint: 'Planilha 2 · encaminhamento' },
-  { to: '/painel/admissoes', label: 'Admissões', icon: '＋', hint: 'Checklist de entrada' },
-  { to: '/painel/desligamentos', label: 'Desligamentos', icon: '－', hint: 'Checklist de saída' },
+  { to: '/interno/chamados', label: 'Chamados', icon: '▤', hint: 'Planilha 1 · gráficos e filtros' },
+  { to: '/interno/triagem', label: 'Triagem', icon: '⇄', hint: 'Planilha 2 · encaminhamento' },
+  { to: '/interno/admissoes', label: 'Admissões', icon: '＋', hint: 'Checklist de entrada' },
+  { to: '/interno/desligamentos', label: 'Desligamentos', icon: '－', hint: 'Checklist de saída' },
 ]
 
 export function AppShell() {
-  const { theme, toggle } = useTheme()
   const { session, signOut } = useAuth()
   const [aberto, setAberto] = useState(false)
 
@@ -64,21 +62,13 @@ export function AppShell() {
           >
             ↗ Abrir formulário
           </NavLink>
-          <button
-            type="button"
-            onClick={toggle}
-            className="mt-1 block w-full rounded-lg px-3 py-2 text-left text-[12.5px] font-medium hover:bg-white/10"
-          >
-            {theme === 'light' ? '◐ Tema escuro' : '◑ Tema claro'}
-          </button>
           {requireAuth && session && (
             <button
               type="button"
               onClick={() => void signOut()}
-              className="mt-1 block w-full truncate rounded-lg px-3 py-2 text-left text-[12.5px] font-medium hover:bg-white/10"
-              title={session.user.email ?? ''}
+              className="mt-1 block w-full rounded-lg px-3 py-2 text-left text-[12.5px] font-medium hover:bg-white/10"
             >
-              ⏻ Sair · {session.user.email}
+              ⏻ Sair
             </button>
           )}
         </div>

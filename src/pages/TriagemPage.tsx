@@ -107,7 +107,7 @@ export function TriagemPage() {
 
       <div className="mb-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
         <StatTile label="Na fila (sem triagem)" value={pendentes.length} accent="var(--warning)" icon="!" />
-        <StatTile label="Em atendimento" value={emAtendimento.length} accent="var(--series-2)" icon="◐" />
+        <StatTile label="Em atendimento" value={emAtendimento.length} accent="var(--series-2)" icon="●" />
         <StatTile label="Sem responsável definido" value={semResponsavel.length} accent="var(--critical)" icon="●" />
         <StatTile label="Resolvidos" value={dados.filter((c) => c.resolvido).length} accent="var(--good)" icon="✓" />
       </div>

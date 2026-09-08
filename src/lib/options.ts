@@ -35,5 +35,9 @@ export const URGENCIA_COLOR: Record<string, string> = {
   Alta: 'var(--critical)',
 }
 
-/** Ícone textual que acompanha a cor de status (cor nunca carrega sentido sozinha). */
-export const URGENCIA_ICON: Record<string, string> = { Baixa: '○', Média: '◐', Alta: '●' }
+/**
+ * Marcador que acompanha a cor de status. Todos cheios, de propósito: o
+ * meio-círculo parecia bolinha cortada. O sentido não fica na cor sozinha
+ * porque o rótulo ("Baixa"/"Média"/"Alta") anda sempre junto do marcador.
+ */
+export const URGENCIA_ICON: Record<string, string> = { Baixa: '●', Média: '●', Alta: '●' }

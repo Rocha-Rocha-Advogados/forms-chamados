@@ -161,7 +161,7 @@ export function ChamadosPage() {
               label="Aguardando triagem"
               value={metricas.semTriagem.length}
               accent="var(--warning)"
-              icon="◐"
+              icon="●"
               hint="Sem checkbox de triagem"
             />
           </div>
@@ -283,7 +283,7 @@ export function ChamadosPage() {
                               Resolvido
                             </Badge>
                           ) : c.triagem ? (
-                            <Badge color="var(--series-2)" icon="◐">
+                            <Badge color="var(--series-2)" icon="●">
                               Em atendimento
                             </Badge>
                           ) : (

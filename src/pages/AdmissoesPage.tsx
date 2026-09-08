@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react'
 import { PageHeader } from '../components/AppShell'
 import { CellLong, CellStatus, CellText } from '../components/cells'
-import { ChartCard, RankedBars } from '../components/charts'
+import { ChartCard, RankedBars, SERIE_ABERTO, SERIE_MAGNITUDE } from '../components/charts'
 import { NovoColaborador } from '../components/NovoColaborador'
 import { GroupRow, Sheet, Td, Th, Tr } from '../components/Sheet'
 import {
@@ -173,7 +173,7 @@ export function AdmissoesPage() {
 
       <div className="mb-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
         <StatTile label="Admissões cadastradas" value={dados.length} hint={`${rows.length} no total da base`} />
-        <StatTile label="Nos próximos 15 dias" value={proximos.length} accent="var(--series-1)" hint="Prazo de preparação" />
+        <StatTile label="Nos próximos 15 dias" value={proximos.length} accent={SERIE_MAGNITUDE} hint="Prazo de preparação" />
         <StatTile
           label="Checklist pendente"
           value={dados.length - concluidos.length}
@@ -190,7 +190,7 @@ export function AdmissoesPage() {
           hint="Quantos colaboradores aguardam cada etapa do checklist."
           table={{ headers: ['Etapa', 'Pendentes'], rows: pendentesPorEtapa.map((d) => [d.name, d.value]) }}
         >
-          <RankedBars data={pendentesPorEtapa} cores="var(--series-2)" nome="Pendentes" />
+          <RankedBars data={pendentesPorEtapa} cores={SERIE_ABERTO} nome="Pendentes" />
         </ChartCard>
         <ChartCard
           title="Admissões por mês"
@@ -198,7 +198,7 @@ export function AdmissoesPage() {
           table={{ headers: ['Mês', 'Admissões'], rows: porMes.map((d) => [d.name, d.value]) }}
         >
           {porMes.length ? (
-            <RankedBars data={porMes} cores="var(--series-1)" nome="Admissões" />
+            <RankedBars data={porMes} cores={SERIE_MAGNITUDE} nome="Admissões" />
           ) : (
             <EmptyState title="Sem datas de admissão preenchidas." />
           )}

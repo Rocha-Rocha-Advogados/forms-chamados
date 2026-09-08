@@ -13,8 +13,13 @@ import {
   YAxis,
 } from 'recharts'
 
-/** Ordem fixa dos slots categóricos — nunca ciclada, nunca por ranking. */
-export const SERIES = ['var(--series-1)', 'var(--series-2)', 'var(--series-3)', 'var(--series-4)'] as const
+/**
+ * Duas cores, com papéis fixos: a 1 é a cor de magnitude (quanto de algo)
+ * e a 2 marca o que está em aberto. Barra de contagem não ganha uma cor por
+ * item — o comprimento já diz tudo, e cor por ranking mentiria.
+ */
+export const SERIE_MAGNITUDE = 'var(--series-1)'
+export const SERIE_ABERTO = 'var(--series-2)'
 
 const AXIS = { fill: 'var(--muted)', fontSize: 11.5 }
 
@@ -224,7 +229,7 @@ export function RankedBars({
           {data.map((item, i) => (
             <Cell
               key={item.name}
-              fill={typeof cores === 'string' ? cores : (cores?.[i] ?? SERIES[i % SERIES.length])}
+              fill={typeof cores === 'string' ? cores : (cores?.[i] ?? SERIE_MAGNITUDE)}
               stroke="var(--surface)"
               strokeWidth={2}
             />
@@ -263,7 +268,7 @@ export function StackedBars({
         <Bar
           dataKey="Resolvidos"
           stackId="s"
-          fill="var(--series-3)"
+          fill="var(--series-1)"
           stroke="var(--surface)"
           strokeWidth={2}
           maxBarSize={18}

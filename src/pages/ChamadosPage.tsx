@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react'
 import { PageHeader } from '../components/AppShell'
 import { FiltroBar } from '../components/FiltroBar'
-import { ChartCard, LegendItem, RankedBars, SERIES, StackedBars, TimeSeries } from '../components/charts'
+import { ChartCard, LegendItem, RankedBars, SERIE_ABERTO, SERIE_MAGNITUDE, StackedBars, TimeSeries } from '../components/charts'
 import { Sheet, Th, Tr, Td } from '../components/Sheet'
 import { Badge, Card, EmptyState, ErrorBanner, SectionTitle, Spinner, StatTile } from '../components/ui'
 import { useTable } from '../hooks/useTable'
@@ -147,7 +147,7 @@ export function ChamadosPage() {
             <StatTile
               label="Em aberto"
               value={metricas.abertos.length}
-              accent="var(--series-2)"
+              accent={SERIE_ABERTO}
               hint={`${pct(metricas.abertos.length, dados.length)}% do período`}
             />
             <StatTile
@@ -201,7 +201,7 @@ export function ChamadosPage() {
               hint="O que mais gera chamado."
               table={{ headers: ['Natureza', 'Chamados'], rows: porNatureza.map((d) => [d.name, d.value]) }}
             >
-              <RankedBars data={porNatureza} cores="var(--series-1)" />
+              <RankedBars data={porNatureza} cores={SERIE_MAGNITUDE} />
             </ChartCard>
 
             <ChartCard
@@ -209,8 +209,8 @@ export function ChamadosPage() {
               hint="Quanto cada destino já resolveu e quanto segue em aberto."
               legend={
                 <>
-                  <LegendItem color="var(--series-3)" label="Resolvidos" />
-                  <LegendItem color="var(--series-2)" label="Abertos" />
+                  <LegendItem color={SERIE_MAGNITUDE} label="Resolvidos" />
+                  <LegendItem color={SERIE_ABERTO} label="Abertos" />
                 </>
               }
               table={{
@@ -226,7 +226,7 @@ export function ChamadosPage() {
               hint="Distribuição da carga na equipe."
               table={{ headers: ['Responsável', 'Chamados'], rows: porResponsavel.map((d) => [d.name, d.value]) }}
             >
-              <RankedBars data={porResponsavel} cores={porResponsavel.map((_, i) => SERIES[i % SERIES.length])} />
+              <RankedBars data={porResponsavel} cores={SERIE_MAGNITUDE} />
             </ChartCard>
 
           </div>

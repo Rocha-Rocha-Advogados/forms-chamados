@@ -162,7 +162,48 @@ alter table public.chamados add constraint chamados_email_dominio
   check (email is null or email ~* '^[^@[:space:]]+@rocharocha\.adv\.br$');
 
 -- ---------------------------------------------------------------------
--- 6. TEMPO REAL
+-- 6. "MEUS CHAMADOS" (área pública)
+--    A pessoa se identifica pelo e-mail, sem senha, e vê os próprios
+--    chamados. Isso é feito por função e não por policy de leitura: com
+--    uma policy, a chave anônima leria a tabela inteira e bastaria trocar
+--    o filtro na URL para ver tudo. Pela função, o anônimo só consegue
+--    pedir uma lista por e-mail, e sem as observações internas da triagem.
+-- ---------------------------------------------------------------------
+create or replace function public.meus_chamados(p_email text)
+returns table (
+  id uuid,
+  created_at timestamptz,
+  natureza text,
+  equipamento text,
+  sistema text,
+  descricao text,
+  urgencia text,
+  encaminhado_para text,
+  responsavel_atendimento text,
+  triagem boolean,
+  resolvido boolean,
+  resolvido_em timestamptz
+)
+language sql
+stable
+security definer
+set search_path = public
+as $$
+  select c.id, c.created_at, c.natureza, c.equipamento, c.sistema, c.descricao,
+         c.urgencia, c.encaminhado_para, c.responsavel_atendimento,
+         c.triagem, c.resolvido, c.resolvido_em
+  from public.chamados c
+  where c.email is not null
+    and lower(c.email) = lower(trim(coalesce(p_email, '')))
+    and length(trim(coalesce(p_email, ''))) > 0
+  order by c.created_at desc
+$$;
+
+revoke all on function public.meus_chamados(text) from public;
+grant execute on function public.meus_chamados(text) to anon, authenticated;
+
+-- ---------------------------------------------------------------------
+-- 7. TEMPO REAL
 --    Sem entrar nesta publicação, o Supabase não emite eventos e os
 --    painéis só atualizam quando alguém recarrega a página.
 --    (Equivale a ligar "Realtime" na tabela pelo painel do Supabase.)
@@ -186,7 +227,7 @@ begin
 end $$;
 
 -- ---------------------------------------------------------------------
--- 7. RLS
+-- 8. RLS
 --    O formulário é público (anon INSERT em chamados).
 --    Leitura/edição dos painéis exige usuário autenticado.
 --    >>> Para usar sem login, troque `to authenticated` por `to anon, authenticated`.

@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react'
 import { PageHeader } from '../components/AppShell'
 import { CellLong, CellStatus, CellText } from '../components/cells'
-import { ChartCard, RankedBars } from '../components/charts'
+import { ChartCard, RankedBars, SERIE_ABERTO, SERIE_MAGNITUDE } from '../components/charts'
 import { NovoColaborador } from '../components/NovoColaborador'
 import { GroupRow, Sheet, Td, Th, Tr } from '../components/Sheet'
 import {
@@ -164,7 +164,7 @@ export function DesligamentosPage() {
 
       <div className="mb-4 grid gap-3 sm:grid-cols-3">
         <StatTile label="Desligamentos cadastrados" value={dados.length} hint={`${rows.length} no total da base`} />
-        <StatTile label="Últimos 30 dias" value={recentes.length} accent="var(--series-1)" hint="Janela de recolhimento" />
+        <StatTile label="Últimos 30 dias" value={recentes.length} accent={SERIE_MAGNITUDE} hint="Janela de recolhimento" />
         <StatTile label="Encerrados" value={concluidos.length} accent="var(--good)" icon="✓" hint="Checklist completo" />
       </div>
 
@@ -174,7 +174,7 @@ export function DesligamentosPage() {
           hint="Quantos desligamentos aguardam cada etapa."
           table={{ headers: ['Etapa', 'Pendentes'], rows: pendentesPorEtapa.map((d) => [d.name, d.value]) }}
         >
-          <RankedBars data={pendentesPorEtapa} cores="var(--series-2)" nome="Pendentes" />
+          <RankedBars data={pendentesPorEtapa} cores={SERIE_ABERTO} nome="Pendentes" />
         </ChartCard>
         <ChartCard
           title="Desligamentos por mês"
@@ -182,7 +182,7 @@ export function DesligamentosPage() {
           table={{ headers: ['Mês', 'Desligamentos'], rows: porMes.map((d) => [d.name, d.value]) }}
         >
           {porMes.length ? (
-            <RankedBars data={porMes} cores="var(--series-1)" nome="Desligamentos" />
+            <RankedBars data={porMes} cores={SERIE_MAGNITUDE} nome="Desligamentos" />
           ) : (
             <EmptyState title="Sem datas de desligamento preenchidas." />
           )}

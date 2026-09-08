@@ -5,6 +5,7 @@ import { CellLong, CellText } from '../components/cells'
 import { GroupRow, Sheet, Td, Th, Tr } from '../components/Sheet'
 import { Badge, Card, Check, EmptyState, ErrorBanner, SectionTitle, Spinner, StatTile } from '../components/ui'
 import { useTable } from '../hooks/useTable'
+import { useQuemSouEu } from '../hooks/useQuemSouEu'
 import { DESTINOS, NATUREZAS, RESPONSAVEIS, URGENCIAS, URGENCIA_COLOR, URGENCIA_ICON } from '../lib/options'
 import { FILTROS_VAZIOS, aplicarFiltros, opcoesDe, type Filtros } from '../lib/filtros'
 import { baixarCsv, fmtDateTime, tempoDoChamado, toCsv } from '../lib/utils'
@@ -17,6 +18,7 @@ export function TriagemPage() {
   const { rows, loading, refreshing, error, reload, update, remove } = useTable('chamados')
   const [filtros, setFiltros] = useState<Filtros>({ ...FILTROS_VAZIOS, periodo: 'all' })
   const [salvando, setSalvando] = useState<Set<string>>(new Set())
+  const { quem, setQuem } = useQuemSouEu()
 
   const dados = useMemo(() => aplicarFiltros(rows, filtros), [rows, filtros])
 
@@ -86,6 +88,24 @@ export function TriagemPage() {
         subtitle="Planilha 2 — mesma base dos chamados, com as colunas de atendimento editáveis. Toda alteração salva na hora."
         right={
           <>
+            <label className="flex items-center gap-2 text-[12.5px] text-ink-2">
+              Você é
+              <select
+                className="field w-[136px]"
+                value={quem}
+                onChange={(e) => setQuem(e.target.value)}
+                aria-label="Quem está usando o painel"
+                style={{ color: quem ? undefined : 'var(--muted)' }}
+                title="Usado para assinar quem resolveu o chamado"
+              >
+                <option value="">Selecione</option>
+                {responsaveis.map((r) => (
+                  <option key={r} value={r} style={{ color: 'var(--ink)' }}>
+                    {r}
+                  </option>
+                ))}
+              </select>
+            </label>
             <button type="button" className="btn btn-ghost" onClick={() => void reload()} disabled={refreshing}>
               <span aria-hidden className={refreshing ? 'inline-block animate-spin' : undefined}>
                 ↻
@@ -138,7 +158,11 @@ export function TriagemPage() {
       <Card>
         <SectionTitle
           title="Fila de atendimento"
-          hint="Linha verde = resolvido · linha laranja = urgência alta ainda em aberto."
+          hint={
+            quem
+              ? `Linha verde = resolvido · linha laranja = urgência alta ainda em aberto. Ao marcar "Resolvido", o chamado é assinado como ${quem}.`
+              : 'Linha verde = resolvido · linha laranja = urgência alta ainda em aberto. Escolha "Você é" acima para que os chamados que você resolver saiam assinados.'
+          }
         />
         {loading ? (
           <Spinner label="Carregando fila…" />
@@ -247,6 +271,10 @@ export function TriagemPage() {
                               resolvido: v,
                               // a triagem é pré-requisito: resolver implica triado
                               ...(v && !c.triagem ? { triagem: true } : {}),
+                              // assina quem resolveu, se ninguém tinha assumido
+                              ...(v && quem && !(c.responsavel_atendimento || '').trim()
+                                ? { responsavel_atendimento: quem }
+                                : {}),
                             })
                           }
                         />

@@ -4,7 +4,8 @@ Substitui o Forms + planilha do Excel por um app em **React + Vite + Supabase**:
 
 | Rota | O que é | Acesso |
 |---|---|---|
-| `/` | Formulário de solicitação de suporte (com ramificação de perguntas) | público |
+| `/` | **Meus chamados** — a pessoa se identifica pelo e-mail corporativo e vê o andamento do que pediu | público |
+| `/novo` | Formulário de solicitação (com ramificação de perguntas) | público |
 | `/interno/chamados` | **Planilha 1** — tudo que entra pelo formulário, com filtros e gráficos | senha da equipe |
 | `/interno/triagem` | **Planilha 2** — encaminhamento, responsável, triagem, resolvido e observações (edição na célula) | senha da equipe |
 | `/interno/admissoes` | Checklist de admissão (equipamentos, acessos, licenças) | senha da equipe |
@@ -88,6 +89,21 @@ Três coisas precisam estar no lugar:
 > liberada para `anon`, os chamados, admissões e desligamentos — com nome, e-mail e descrição de
 > problema de cada colaborador — ficam legíveis por qualquer um, sem senha.
 
+## Identificação de quem abre o chamado
+
+Na área pública a pessoa digita o e-mail corporativo e passa a ver os próprios chamados. **É
+identificação, não autenticação**: não há verificação, então quem digitar o endereço de outra pessoa
+vê os chamados dela. Foi a escolha do escritório, em troca de não depender de e-mail de confirmação.
+
+O estrago fica contido no que essa escolha implica, e não além: a lista **não** vem de uma policy de
+leitura aberta, e sim da função `meus_chamados(email)` (seção 6 do `schema.sql`). A diferença é
+grande — com uma policy, a chave anônima leria a tabela inteira e bastaria trocar o filtro na URL
+para ver tudo. Pela função, o anônimo só consegue pedir uma lista por e-mail, sem as observações
+internas da triagem, e continua sem conseguir ler a tabela direto.
+
+Para trocar por verificação de verdade um dia: `signInWithOtp` no Supabase (código por e-mail) e a
+policy de leitura passando a comparar com `auth.jwt() ->> 'email'`. O resto do app não muda.
+
 ## Como o fluxo funciona
 
 ```
@@ -101,6 +117,10 @@ Formulário (/)  ──insert──▶  tabela chamados  ──▶  Painel Chama
   na API não passa com endereço de fora (registros antigos, sem e-mail, continuam válidos).
 - **Uma tabela só** (`chamados`) alimenta as duas planilhas: a primeira mostra as respostas do
   formulário, a segunda edita as colunas de atendimento. Nada de cópia entre abas.
+- **Quem resolveu assina sozinho.** A conta dos painéis é compartilhada, então o app não tem como
+  saber quem está usando: a pessoa escolhe seu nome em "Você é" (fica salvo no navegador dela) e,
+  ao marcar um chamado como resolvido, o "Responsável pelo atendimento" é preenchido com esse nome —
+  sem sobrescrever quem já tinha assumido.
 - **Atualização sem recarregar a tela.** Só a primeira carga mostra "carregando"; depois disso nada
   é remontado. Se o Igor marcar "Resolvido", chega o evento e só aquela linha muda na tela do Murilo
   — inclusive sem apagar o que ele estiver digitando numa célula. O botão "Atualizar" busca em

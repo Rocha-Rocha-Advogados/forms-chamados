@@ -25,10 +25,10 @@
   --brand-degrade: linear-gradient(var(--brand-2) 0%, var(--brand) 100%);
 
   /* categóricas (ordem fixa, nunca ciclada) */
-  --series-1:    #2a78d6;
+  /* Paleta de dados sem azul (o azul agora é da marca). Validada para
+     daltonismo e contraste: pior par ΔE 9.2 (deutan) e 27.6 sem simulação. */
+  --series-1:    #1baf7a;
   --series-2:    #eb6834;
-  --series-3:    #1baf7a;
-  --series-4:    #eda100;
 
   /* status (reservadas — sempre com ícone/rótulo) */
   --good:        #0ca30c;
@@ -59,10 +59,8 @@
   --brand-ink:   #ffffff;
   --brand-degrade: linear-gradient(var(--brand-2) 0%, var(--brand) 100%);
 
-  --series-1:    #3987e5;
+  --series-1:    #199e70;
   --series-2:    #d95926;
-  --series-3:    #199e70;
-  --series-4:    #c98500;
 
   --grid:        #2c2c2a;
   --axis:        #383835;
@@ -84,8 +82,6 @@
   --color-brand-ink:   var(--brand-ink);
   --color-s1:          var(--series-1);
   --color-s2:          var(--series-2);
-  --color-s3:          var(--series-3);
-  --color-s4:          var(--series-4);
   --color-good:        var(--good);
   --color-warning:     var(--warning);
   --color-serious:     var(--serious);
@@ -195,6 +191,73 @@
   }
 
   .tnum { font-variant-numeric: tabular-nums; }
+}
+
+/* ------------------------------------------------------------------ *
+ * Confirmação de envio: a tela inteira é tomada por um círculo que se
+ * abre a partir do centro, o "certo" se desenha e o texto sobe. É a
+ * única animação grande do app — o envio do chamado é o momento que
+ * merece resposta clara. Quem pediu menos movimento no sistema recebe
+ * a mesma tela, sem movimento.
+ * ------------------------------------------------------------------ */
+@keyframes rr-abrir {
+  from { clip-path: circle(0% at 50% 45%); }
+  to   { clip-path: circle(150% at 50% 45%); }
+}
+@keyframes rr-pulso {
+  0%   { transform: scale(0.6); opacity: 0.55; }
+  70%  { transform: scale(1.9); opacity: 0; }
+  100% { transform: scale(1.9); opacity: 0; }
+}
+@keyframes rr-riscar { to { stroke-dashoffset: 0; } }
+@keyframes rr-subir {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes rr-selo {
+  0%   { transform: scale(0.2) rotate(-25deg); opacity: 0; }
+  55%  { transform: scale(1.12) rotate(4deg); opacity: 1; }
+  100% { transform: scale(1) rotate(0deg); opacity: 1; }
+}
+
+.rr-confirmacao {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  padding: 24px;
+  color: var(--brand-ink);
+  background: var(--brand-degrade);
+  animation: rr-abrir 620ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.rr-selo { animation: rr-selo 620ms cubic-bezier(0.34, 1.56, 0.64, 1) 120ms both; }
+.rr-pulso {
+  position: absolute;
+  inset: 0;
+  border-radius: 999px;
+  border: 2px solid var(--brand-ink);
+  animation: rr-pulso 1.5s ease-out 520ms infinite;
+}
+.rr-risco {
+  stroke-dasharray: 48;
+  stroke-dashoffset: 48;
+  animation: rr-riscar 520ms cubic-bezier(0.65, 0, 0.35, 1) 420ms both;
+}
+.rr-sobe   { animation: rr-subir 520ms cubic-bezier(0.22, 1, 0.36, 1) 620ms both; }
+.rr-sobe-2 { animation: rr-subir 520ms cubic-bezier(0.22, 1, 0.36, 1) 760ms both; }
+.rr-sobe-3 { animation: rr-subir 520ms cubic-bezier(0.22, 1, 0.36, 1) 900ms both; }
+
+@media (prefers-reduced-motion: reduce) {
+  .rr-confirmacao, .rr-selo, .rr-risco, .rr-sobe, .rr-sobe-2, .rr-sobe-3 {
+    animation: none;
+    clip-path: none;
+    stroke-dashoffset: 0;
+    opacity: 1;
+    transform: none;
+  }
+  .rr-pulso { display: none; }
 }
 
 /* scrollbar discreta nas planilhas */

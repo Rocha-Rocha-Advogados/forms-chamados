@@ -13,7 +13,7 @@ export const EQUIPAMENTOS = ['Notebook', 'Monitor', 'Teclado/Mouse', 'Impressora
 export const URGENCIAS = ['Baixa', 'Média', 'Alta'] as const
 export type Urgencia = (typeof URGENCIAS)[number]
 
-export const DESTINOS = ['D&I', 'Administrativo', 'Altatech', 'Financeiro', 'Jurídico', 'Outro'] as const
+export const DESTINOS = ['D&I', 'Altatech', 'Financeiro', 'Jurídico', 'Outro'] as const
 
 export const RESPONSAVEIS = ['Murilo', 'Igor', 'Nathan', 'Marcos', 'Outro'] as const
 

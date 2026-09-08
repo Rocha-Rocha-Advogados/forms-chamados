@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useAuth } from '../hooks/useAuth'
-import { equipeEmail, requireAuth, supabaseConfigured } from '../lib/supabase'
+import { equipeEmail, supabaseConfigured } from '../lib/supabase'
 import { ErrorBanner, Field, Spinner, TextInput } from './ui'
 
 /**
@@ -18,8 +18,6 @@ export function AuthGate({ children }: { children: React.ReactNode }) {
   const [senha, setSenha] = useState('')
   const [erro, setErro] = useState<string | null>(null)
   const [enviando, setEnviando] = useState(false)
-
-  if (!requireAuth) return <>{children}</>
 
   if (!supabaseConfigured)
     return (

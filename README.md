@@ -19,31 +19,33 @@ digitando o endereço, e ali é preciso a senha da equipe.
    - `supabase/schema.sql` (tabelas, índices, triggers, RLS)
    - `supabase/seed.sql` (opcional — carrega o que já existia nas planilhas: 18 chamados com a triagem
      preenchida, 4 admissões, 8 desligamentos)
-   - `supabase/policies-sem-login.sql` (só no modo sem login — veja o aviso abaixo)
 2. Em **Project Settings → API Keys**, copie a chave **anon public**.
 3. Preencha o `.env`:
 
 ```env
 VITE_SUPABASE_URL=https://iknyexwubnnabdfmqxhz.supabase.co
 VITE_SUPABASE_ANON_KEY=cole-a-chave-anon-aqui
-VITE_REQUIRE_AUTH=true
 ```
 
-4. **Senha da equipe.** Os painéis usam uma conta única do Supabase Auth: o endereço fica em
-   `VITE_EQUIPE_EMAIL` no `.env` e a senha é digitada na tela de acesso. Para criar ou trocar,
-   vá em **Authentication → Users** (ao criar, marque *Auto Confirm User*, senão a conta só entra
-   depois de confirmar o e-mail).
+   Só isso. **Quem tem o endereço do painel e a senha entra** — não há mais chave para ligar ou
+   desligar o acesso.
+
+4. **Senha da equipe.** Os painéis usam uma conta única do Supabase Auth. O endereço dela é uma
+   constante do código (`equipeEmail`, em `src/lib/supabase.ts`) — identifica a conta e não autoriza
+   nada, por isso não é segredo. A senha é digitada na tela de acesso. Para criar ou trocar, vá em
+   **Authentication → Users** (ao criar, marque *Auto Confirm User*, senão a conta só entra depois
+   de confirmar o e-mail).
 
    A senha entra numa conta de verdade em vez de ser comparada aqui no navegador de propósito:
    comparada no navegador, ela viajaria dentro do JavaScript da página e o RLS teria de liberar
-   leitura para a chave anônima — qualquer pessoa com o endereço leria os chamados de todo mundo.
-   Do jeito atual, sem a senha certa não sai sessão, e sem sessão o banco não devolve nada.
+   leitura para a chave anônima — qualquer pessoa com o endereço leria os chamados de todo mundo,
+   sem senha. Do jeito atual, sem a senha certa não sai sessão, e sem sessão o banco não devolve
+   nada.
 
-> **Painéis sem login?** Ponha `VITE_REQUIRE_AUTH=false` no `.env` **e** rode
-> `supabase/policies-sem-login.sql`. As duas coisas juntas — só desligar a flag do app não basta: o
-> RLS continua barrando a leitura e os painéis aparecem vazios, com cara de "não conectou". Nesse
-> modo, qualquer pessoa com o link vê e edita tudo, inclusive nome, e-mail e descrição de problema
-> dos colaboradores.
+> **As policies precisam exigir sessão.** Se em algum momento você liberou leitura para a chave
+> anônima, a senha deixa de proteger: essa chave vai publicada no JavaScript do site e com ela dá
+> para ler a base inteira sem passar pela tela de acesso. Rodar o `supabase/schema.sql` de novo
+> restaura as policies certas (o arquivo é seguro de repetir).
 
 > **Primeiro login não entra?** Com *Confirm email* ligado (padrão do Supabase), a conta só funciona
 > depois de clicar no link do e-mail de confirmação. Para uso interno é mais prático desligar em

@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { NavLink, Outlet } from 'react-router-dom'
 import { useAuth } from '../hooks/useAuth'
-import { requireAuth } from '../lib/supabase'
 import { cn } from '../lib/utils'
 
 const NAV = [
@@ -62,7 +61,7 @@ export function AppShell() {
           >
             ↗ Abrir formulário
           </NavLink>
-          {requireAuth && session && (
+          {session && (
             <button
               type="button"
               onClick={() => void signOut()}

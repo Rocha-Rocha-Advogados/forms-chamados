@@ -140,9 +140,6 @@ export function FormularioPage() {
         </div>
 
         <div className="relative mt-10 lg:mt-0">
-          <p className="text-[12px] leading-relaxed opacity-60">
-            Chamados abertos por aqui vão direto para a fila de triagem da equipe de TI.
-          </p>
           </div>
         </div>
       </aside>

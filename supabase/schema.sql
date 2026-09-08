@@ -261,3 +261,12 @@ create policy "admissoes: interna" on public.admissoes
 drop policy if exists "desligamentos: interna" on public.desligamentos;
 create policy "desligamentos: interna" on public.desligamentos
   for all to authenticated using (true) with check (true);
+
+-- ---------------------------------------------------------------------
+-- 9. RECARREGAR O CACHE DA API
+--    O PostgREST guarda em memória a lista de tabelas e funções. Sem
+--    este aviso, uma função recém-criada pode responder
+--    "Could not find the function ... in the schema cache" até ele
+--    recarregar sozinho.
+-- ---------------------------------------------------------------------
+notify pgrst, 'reload schema';

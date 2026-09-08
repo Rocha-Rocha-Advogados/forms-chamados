@@ -116,10 +116,6 @@ export function FormularioPage() {
           <Link to="/" className="text-[12.5px] font-medium text-ink-2 hover:text-ink">
             ← Meus chamados
           </Link>
-          <p className="text-[12.5px] text-muted">
-            {perguntas.length} perguntas · os campos com <span style={{ color: 'var(--critical)' }}>*</span> são
-            obrigatórios
-          </p>
         </div>
 
         <form onSubmit={enviar} noValidate>
@@ -144,7 +140,7 @@ export function FormularioPage() {
                 <Field
                   label="E-mail corporativo"
                   required
-                  hint={`Precisa ser o seu endereço @${DOMINIO} — é por ele que o atendimento te procura.`}
+                  hint={`Precisa ser o seu endereço @${DOMINIO}.`}
                   error={erros.email}
                 >
                   <TextInput
@@ -231,9 +227,6 @@ export function FormularioPage() {
                   )
                 })}
               </div>
-              <p className="mt-2 text-[11.5px] text-muted">
-                Alta = trabalho parado. Média = atrapalha, mas há contorno. Baixa = pode aguardar.
-              </p>
             </Question>
           </div>
 

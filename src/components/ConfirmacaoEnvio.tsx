@@ -31,8 +31,8 @@ export function ConfirmacaoEnvio({
           Chamado registrado
         </h2>
         <p className="rr-sobe-2 mx-auto mt-3 max-w-[36ch] text-[14px] leading-relaxed opacity-85">
-          Já entrou na fila de triagem da equipe de TI. Você acompanha o andamento em
-          “Meus chamados” — e é procurado pelo responsável assim que o atendimento começar.
+          Já entrou na fila de triagem da equipe. Você acompanha o andamento em
+          “Meus chamados”.
         </p>
 
         <div className="rr-sobe-3 mt-7 flex flex-wrap justify-center gap-2.5">

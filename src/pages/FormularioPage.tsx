@@ -100,7 +100,7 @@ export function FormularioPage() {
   }
 
   return (
-    <div className="min-h-screen lg:grid lg:min-h-screen lg:grid-cols-[minmax(320px,42%)_1fr] lg:gap-0">
+    <div className="min-h-screen lg:grid lg:min-h-screen lg:grid-cols-[minmax(360px,52%)_1fr] lg:gap-0">
       {/* ------------------------------------------------------- capa (marca) */}
       {/* a coluna estica com a linha do grid; o conteúdo dentro dela é que fica fixo */}
       <aside
@@ -144,8 +144,10 @@ export function FormularioPage() {
           </p>
         </div>
 
-        <div className="relative mt-10 lg:mt-0">
-          </div>
+        {/* espaçador: o justify-between desta coluna usa três blocos, e é
+            ele que mantém o título na altura do meio. Removê-lo joga o
+            título para o pé da coluna. */}
+        <div aria-hidden />
         </div>
       </aside>
 

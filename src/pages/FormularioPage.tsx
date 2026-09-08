@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { CapaPublica } from '../components/CapaPublica'
 import { ConfirmacaoEnvio } from '../components/ConfirmacaoEnvio'
@@ -45,13 +45,6 @@ export function FormularioPage() {
   // ramificação igual à do formulário original
   const pedeEquipamento = form.natureza === 'Computador ou equipamento'
   const pedeSistema = form.natureza === 'Sistema ou aplicativo interno'
-
-  const perguntas = useMemo(() => {
-    const base = ['Identificação', 'Natureza do problema']
-    if (pedeEquipamento) base.push('Equipamento')
-    if (pedeSistema) base.push('Sistema')
-    return [...base, 'Descrição', 'Urgência']
-  }, [pedeEquipamento, pedeSistema])
 
   const validar = () => {
     const e: Partial<Record<keyof Form, string>> = {}

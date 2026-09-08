@@ -72,7 +72,7 @@ export function MeusChamadosPage() {
           chamados
         </>
       }
-      subtitulo="Acompanhe o que você já pediu para a equipe de TI e abra novas solicitações."
+      subtitulo="Acompanhe o que você já pediu para a equipe e abra novas solicitações."
     >
       {!email ? (
         <form onSubmit={entrar} className="card p-6">
@@ -98,29 +98,23 @@ export function MeusChamadosPage() {
         </form>
       ) : (
         <>
-          <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+          <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
             <p className="text-[12.5px] text-ink-2">
-              Você está como <strong className="font-medium text-ink">{email}</strong>{' '}
-              <button
-                type="button"
-                onClick={sair}
-                className="ml-1 underline decoration-[var(--line-strong)] hover:text-ink"
-              >
-                trocar
-              </button>
+              Você está como <strong className="font-medium text-ink">{email}</strong>
             </p>
-            <button type="button" className="btn btn-primary" onClick={() => navegar('/novo')}>
-              ＋ Abrir chamado
-            </button>
+            <div className="flex flex-wrap items-center gap-2">
+              <button type="button" className="btn btn-ghost" onClick={sair}>
+                Trocar e-mail
+              </button>
+              <button type="button" className="btn btn-primary" onClick={() => navegar('/novo')}>
+                ＋ Abrir chamado
+              </button>
+            </div>
           </div>
 
-          {erro && (
-            <div className="mb-4">
-              <ErrorBanner message={erro} onRetry={() => void buscar()} />
-            </div>
-          )}
-
-          {carregando ? (
+          {erro ? (
+            <ErrorBanner message={mensagemDeErro(erro)} onRetry={() => void buscar()} />
+          ) : carregando ? (
             <Spinner label="Buscando seus chamados…" />
           ) : chamados.length === 0 ? (
             <div className="card px-5 py-12 text-center">
@@ -166,6 +160,13 @@ export function MeusChamadosPage() {
       )}
     </CapaPublica>
   )
+}
+
+/** Traduz o que o banco devolve para algo acionável por quem abre chamado. */
+function mensagemDeErro(bruto: string) {
+  if (bruto.includes('meus_chamados'))
+    return 'A busca de chamados ainda não foi ativada no banco. Avise a equipe de TI: falta rodar o supabase/schema.sql.'
+  return `Não foi possível buscar seus chamados. ${bruto}`
 }
 
 function Situacao({ chamado }: { chamado: MeuChamado }) {

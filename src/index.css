@@ -1,0 +1,177 @@
+@import "tailwindcss";
+
+/* ------------------------------------------------------------------ *
+ * Tokens — um valor por papel; o modo escuro só redefine os valores.
+ * Paleta de dados validada pelo validador do design system
+ * (banda de luminosidade, piso de croma, separação CVD, contraste).
+ * ------------------------------------------------------------------ */
+:root {
+  color-scheme: light;
+
+  --page:        #f4f4f1;
+  --surface:     #ffffff;
+  --surface-2:   #f7f7f5;
+  --surface-3:   #eeeeea;
+  --ink:         #0b0b0b;
+  --ink-2:       #52514e;
+  --muted:       #898781;
+  --line:        #e1e0d9;
+  --line-strong: #c3c2b7;
+
+  /* identidade Rocha & Rocha */
+  --brand:       #1f3864;
+  --brand-2:     #2c4d87;
+  --brand-ink:   #ffffff;
+
+  /* categóricas (ordem fixa, nunca ciclada) */
+  --series-1:    #2a78d6;
+  --series-2:    #eb6834;
+  --series-3:    #1baf7a;
+  --series-4:    #eda100;
+
+  /* status (reservadas — sempre com ícone/rótulo) */
+  --good:        #0ca30c;
+  --warning:     #fab219;
+  --serious:     #ec835a;
+  --critical:    #d03b3b;
+
+  --grid:        #e1e0d9;
+  --axis:        #c3c2b7;
+  --ring:        rgb(11 11 11 / 0.10);
+}
+
+[data-theme="dark"] {
+  color-scheme: dark;
+
+  --page:        #0d0d0d;
+  --surface:     #1a1a19;
+  --surface-2:   #202020;
+  --surface-3:   #2a2a28;
+  --ink:         #ffffff;
+  --ink-2:       #c3c2b7;
+  --muted:       #898781;
+  --line:        #2c2c2a;
+  --line-strong: #383835;
+
+  --brand:       #15243f;
+  --brand-2:     #24406e;
+  --brand-ink:   #ffffff;
+
+  --series-1:    #3987e5;
+  --series-2:    #d95926;
+  --series-3:    #199e70;
+  --series-4:    #c98500;
+
+  --grid:        #2c2c2a;
+  --axis:        #383835;
+  --ring:        rgb(255 255 255 / 0.10);
+}
+
+@theme inline {
+  --color-page:        var(--page);
+  --color-surface:     var(--surface);
+  --color-surface-2:   var(--surface-2);
+  --color-surface-3:   var(--surface-3);
+  --color-ink:         var(--ink);
+  --color-ink-2:       var(--ink-2);
+  --color-muted:       var(--muted);
+  --color-line:        var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-brand:       var(--brand);
+  --color-brand-2:     var(--brand-2);
+  --color-brand-ink:   var(--brand-ink);
+  --color-s1:          var(--series-1);
+  --color-s2:          var(--series-2);
+  --color-s3:          var(--series-3);
+  --color-s4:          var(--series-4);
+  --color-good:        var(--good);
+  --color-warning:     var(--warning);
+  --color-serious:     var(--serious);
+  --color-critical:    var(--critical);
+
+  --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+@layer base {
+  html, body, #root { height: 100%; }
+  body {
+    margin: 0;
+    background: var(--page);
+    color: var(--ink);
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    font-size: 14px;
+    -webkit-font-smoothing: antialiased;
+  }
+  * { border-color: var(--line); }
+  ::placeholder { color: var(--muted); }
+  :focus-visible { outline: 2px solid var(--series-1); outline-offset: 2px; }
+}
+
+@layer components {
+  /* controles de formulário e de planilha */
+  .field {
+    width: 100%;
+    background: var(--surface-2);
+    color: var(--ink);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 9px 11px;
+    font: inherit;
+    transition: border-color .12s ease, background .12s ease;
+  }
+  .field:hover:not(:disabled) { border-color: var(--line-strong); }
+  .field:focus { border-color: var(--series-1); background: var(--surface); outline: none; }
+  .field[aria-invalid="true"] { border-color: var(--critical); }
+  select.field { appearance: none; padding-right: 30px;
+    background-image: linear-gradient(45deg, transparent 50%, var(--muted) 50%),
+                      linear-gradient(135deg, var(--muted) 50%, transparent 50%);
+    background-position: calc(100% - 16px) 51%, calc(100% - 11px) 51%;
+    background-size: 5px 5px, 5px 5px;
+    background-repeat: no-repeat;
+  }
+
+  /* célula de planilha: só ganha moldura no hover/foco */
+  .cell {
+    width: 100%;
+    background: transparent;
+    color: var(--ink);
+    border: 1px solid transparent;
+    border-radius: 6px;
+    padding: 5px 7px;
+    font: inherit;
+    min-width: 0;
+  }
+  .cell:hover:not(:disabled) { border-color: var(--line); background: var(--surface-2); }
+  .cell:focus { border-color: var(--series-1); background: var(--surface); outline: none; }
+
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 7px;
+    border-radius: 8px; padding: 9px 15px; font-weight: 600; font-size: 13.5px;
+    border: 1px solid transparent; cursor: pointer; white-space: nowrap;
+    transition: filter .12s ease, background .12s ease;
+  }
+  .btn:disabled { opacity: .55; cursor: not-allowed; }
+  .btn-primary { background: var(--brand); color: var(--brand-ink); }
+  .btn-primary:hover:not(:disabled) { filter: brightness(1.15); }
+  .btn-ghost { background: var(--surface); color: var(--ink); border-color: var(--line); }
+  .btn-ghost:hover:not(:disabled) { background: var(--surface-2); border-color: var(--line-strong); }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+  }
+
+  .tnum { font-variant-numeric: tabular-nums; }
+}
+
+/* scrollbar discreta nas planilhas */
+.scroll-x { scrollbar-width: thin; scrollbar-color: var(--line-strong) transparent; }
+.scroll-x::-webkit-scrollbar { height: 10px; width: 10px; }
+.scroll-x::-webkit-scrollbar-thumb { background: var(--line-strong); border-radius: 99px; }
+.scroll-x::-webkit-scrollbar-track { background: transparent; }
+
+@media print {
+  .no-print { display: none !important; }
+  body { background: #fff; }
+}

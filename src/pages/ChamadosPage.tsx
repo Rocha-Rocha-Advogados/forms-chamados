@@ -66,6 +66,7 @@ export function ChamadosPage() {
         [
           'Data/Hora',
           'Colaborador',
+          'E-mail',
           'Natureza',
           'Equipamento',
           'Sistema',
@@ -83,6 +84,7 @@ export function ChamadosPage() {
         dados.map((c) => [
           fmtDateTime(c.created_at),
           c.colaborador,
+          c.email,
           c.natureza,
           c.equipamento,
           c.sistema,
@@ -248,7 +250,7 @@ export function ChamadosPage() {
                   <thead>
                     <tr>
                       <Th width={132}>Data/Hora</Th>
-                      <Th width={190}>Colaborador</Th>
+                      <Th width={220}>Colaborador</Th>
                       <Th width={190}>Natureza</Th>
                       <Th width={150}>Equipamento / Sistema</Th>
                       <Th width={340}>Descrição</Th>
@@ -262,7 +264,14 @@ export function ChamadosPage() {
                     {dados.map((c, i) => (
                       <Tr key={c.id} zebra={i % 2 === 1}>
                         <Td className="tnum whitespace-nowrap text-ink-2">{fmtDateTime(c.created_at)}</Td>
-                        <Td className="font-medium">{c.colaborador}</Td>
+                        <Td className="font-medium">
+                          {c.colaborador}
+                          {c.email && (
+                            <span className="block truncate text-[11.5px] font-normal text-muted" title={c.email}>
+                              {c.email}
+                            </span>
+                          )}
+                        </Td>
                         <Td className="text-ink-2">{c.natureza}</Td>
                         <Td className="text-ink-2">{c.equipamento || c.sistema || '—'}</Td>
                         <Td className="text-ink-2">

@@ -57,6 +57,7 @@ export function TriagemPage() {
         [
           'Data/Hora',
           'Colaborador',
+          'E-mail',
           'Urgência',
           'Encaminhado para',
           'Responsável pelo atendimento',
@@ -69,6 +70,7 @@ export function TriagemPage() {
         dados.map((c) => [
           fmtDateTime(c.created_at),
           c.colaborador,
+          c.email,
           c.urgencia,
           c.encaminhado_para,
           c.responsavel_atendimento,
@@ -182,7 +184,7 @@ export function TriagemPage() {
                 />
                 <tr>
                   <Th width={128} top={31}>Data/Hora</Th>
-                  <Th width={180} top={31}>Colaborador</Th>
+                  <Th width={210} top={31}>Colaborador</Th>
                   <Th width={160} top={31}>Natureza</Th>
                   <Th width={280} top={31}>Descrição</Th>
                   <Th width={104} top={31} align="center">Urgência</Th>
@@ -212,6 +214,11 @@ export function TriagemPage() {
                       <Td className="tnum whitespace-nowrap text-ink-2">{fmtDateTime(c.created_at)}</Td>
                       <Td className="font-medium">
                         {c.colaborador}
+                        {c.email && (
+                          <span className="block truncate text-[11.5px] font-normal text-muted" title={c.email}>
+                            {c.email}
+                          </span>
+                        )}
                       </Td>
                       <Td className="text-ink-2">
                         {c.natureza}

@@ -24,8 +24,8 @@ digitando o endereço, e ali é preciso a senha da equipe.
 3. Preencha o `.env`:
 
 ```env
-VITE_SUPABASE_URL=https://iknyexwubnnabdfmqxhz.supabase.co
-VITE_SUPABASE_ANON_KEY=cole-a-chave-anon-aqui
+VITE_SUPABASE_URL=
+VITE_SUPABASE_ANON_KEY=
 ```
 
    Só isso. **Quem tem o endereço do painel e a senha entra** — não há mais chave para ligar ou

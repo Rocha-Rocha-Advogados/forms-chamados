@@ -24,7 +24,7 @@ type MeuChamado = {
 }
 
 export function MeusChamadosPage() {
-  const { email, identificar, sair } = useIdentificacao()
+  const { email, identificar } = useIdentificacao()
   const navegar = useNavigate()
 
   const [rascunho, setRascunho] = useState('')
@@ -102,14 +102,9 @@ export function MeusChamadosPage() {
             <p className="text-[12.5px] text-ink-2">
               Você está como <strong className="font-medium text-ink">{email}</strong>
             </p>
-            <div className="flex flex-wrap items-center gap-2">
-              <button type="button" className="btn btn-ghost" onClick={sair}>
-                Trocar e-mail
-              </button>
-              <button type="button" className="btn btn-primary" onClick={() => navegar('/novo')}>
-                ＋ Abrir chamado
-              </button>
-            </div>
+            <button type="button" className="btn btn-primary" onClick={() => navegar('/novo')}>
+              ＋ Abrir chamado
+            </button>
           </div>
 
           {erro ? (

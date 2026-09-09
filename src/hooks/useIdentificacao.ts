@@ -36,5 +36,5 @@ export function useIdentificacao() {
     return true
   }, [])
 
-  return { email, identificar, sair: () => setEmail('') }
+  return { email, identificar }
 }

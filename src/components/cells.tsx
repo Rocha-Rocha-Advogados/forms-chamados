@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { cn } from '../lib/utils'
 import { tarefaFeita } from '../lib/options'
 
@@ -148,5 +148,54 @@ export function CellLong({
         }
       }}
     />
+  )
+}
+
+/**
+ * Descrição do chamado na planilha: duas linhas, e o resto abre no clique.
+ * O "ver mais" só aparece quando existe texto escondido — medido no próprio
+ * elemento, porque o corte depende da largura da coluna. Enquanto está
+ * aberto a medição para, senão o botão sumiria justo quando é "ver menos".
+ */
+export function TextoExpansivel({ texto, linhas = 2 }: { texto: string; linhas?: number }) {
+  const [aberto, setAberto] = useState(false)
+  const [cortado, setCortado] = useState(false)
+  const ref = useRef<HTMLParagraphElement>(null)
+
+  useEffect(() => {
+    const el = ref.current
+    if (!el || aberto) return
+    const medir = () => setCortado(el.scrollHeight > el.clientHeight + 1)
+    medir()
+    const observador = new ResizeObserver(medir)
+    observador.observe(el)
+    return () => observador.disconnect()
+  }, [texto, aberto])
+
+  return (
+    <button
+      type="button"
+      disabled={!cortado && !aberto}
+      onClick={() => setAberto((v) => !v)}
+      aria-expanded={aberto}
+      className="block w-full text-left enabled:cursor-pointer"
+    >
+      <p
+        ref={ref}
+        className="whitespace-pre-line"
+        style={
+          aberto
+            ? undefined
+            : { display: '-webkit-box', WebkitBoxOrient: 'vertical', WebkitLineClamp: linhas, overflow: 'hidden' }
+        }
+      >
+        {texto}
+      </p>
+      {(cortado || aberto) && (
+        <span className="mt-0.5 inline-block text-[11.5px] text-muted underline underline-offset-2 hover:text-ink">
+          {aberto ? 'ver menos' : 'ver mais'}
+        </span>
+      )}
+    </button>
   )
 }

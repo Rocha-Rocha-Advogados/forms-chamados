@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react'
 import { PageHeader } from '../components/AppShell'
 import { FiltroBar } from '../components/FiltroBar'
-import { CellLong, CellText } from '../components/cells'
+import { CellLong, CellText, TextoExpansivel } from '../components/cells'
 import { GroupRow, Sheet, Td, Th, Tr } from '../components/Sheet'
 import { Badge, Card, Check, EmptyState, ErrorBanner, SectionTitle, Spinner, StatTile } from '../components/ui'
 import { useTable } from '../hooks/useTable'
@@ -227,9 +227,7 @@ export function TriagemPage() {
                         )}
                       </Td>
                       <Td className="text-ink-2">
-                        <span className="line-clamp-2" title={c.descricao}>
-                          {c.descricao}
-                        </span>
+                        <TextoExpansivel texto={c.descricao} />
                       </Td>
                       <Td align="center">
                         <Badge color={URGENCIA_COLOR[c.urgencia]} icon={URGENCIA_ICON[c.urgencia]}>

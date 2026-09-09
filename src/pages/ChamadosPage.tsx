@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react'
 import { PageHeader } from '../components/AppShell'
 import { FiltroBar } from '../components/FiltroBar'
 import { ChartCard, LegendItem, RankedBars, SERIE_ABERTO, SERIE_MAGNITUDE, StackedBars, TimeSeries } from '../components/charts'
+import { TextoExpansivel } from '../components/cells'
 import { Sheet, Th, Tr, Td } from '../components/Sheet'
 import { Badge, Card, EmptyState, ErrorBanner, SectionTitle, Spinner, StatTile } from '../components/ui'
 import { useTable } from '../hooks/useTable'
@@ -275,9 +276,7 @@ export function ChamadosPage() {
                         <Td className="text-ink-2">{c.natureza}</Td>
                         <Td className="text-ink-2">{c.equipamento || c.sistema || '—'}</Td>
                         <Td className="text-ink-2">
-                          <span className="line-clamp-2" title={c.descricao}>
-                            {c.descricao}
-                          </span>
+                          <TextoExpansivel texto={c.descricao} />
                         </Td>
                         <Td align="center">
                           <Badge color={URGENCIA_COLOR[c.urgencia]} icon={URGENCIA_ICON[c.urgencia]}>

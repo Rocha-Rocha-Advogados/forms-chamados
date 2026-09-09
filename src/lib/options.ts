@@ -15,7 +15,7 @@ export type Urgencia = (typeof URGENCIAS)[number]
 
 export const DESTINOS = ['D&I', 'Altatech', 'Financeiro', 'Jurídico', 'Outro'] as const
 
-export const RESPONSAVEIS = ['Murilo', 'Igor', 'Nathan', 'Marcos', 'Outro'] as const
+export const RESPONSAVEIS = ['Murilo', 'Igor', 'Nathan', 'Outro'] as const
 
 /** Status do checklist de admissão/desligamento. */
 export const STATUS_TAREFA = ['', 'Pendente', 'Em andamento', 'Concluído', 'N/A'] as const

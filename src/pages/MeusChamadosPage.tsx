@@ -103,7 +103,7 @@ export function MeusChamadosPage() {
               Você está como <strong className="font-medium text-ink">{email}</strong>
             </p>
             <button type="button" className="btn btn-primary" onClick={() => navegar('/novo')}>
-              ＋ Abrir chamado
+              Abrir chamado
             </button>
           </div>
 
@@ -144,7 +144,8 @@ export function MeusChamadosPage() {
                       </span>
                       Urgência {c.urgencia.toLowerCase()}
                     </span>
-                    {c.responsavel_atendimento && <span>Atendido por {c.responsavel_atendimento}</span>}
+                    {c.encaminhado_para && <span>Encaminhado para {c.encaminhado_para}</span>}
+                    {c.responsavel_atendimento && <span>Responsável {c.responsavel_atendimento}</span>}
                     {c.resolvido && c.resolvido_em && <span>Resolvido em {fmtDateTime(c.resolvido_em)}</span>}
                   </div>
                 </li>

@@ -193,7 +193,7 @@ export function TriagemPage() {
                   <Th width={126} top={31}>Nº do chamado</Th>
                   <Th width={72} top={31} align="center">Triagem</Th>
                   <Th width={80} top={31} align="center">Resolvido</Th>
-                  <Th width={86} top={31} align="right" title="Conta da abertura do chamado: até a solução, ou até agora se ainda está na fila.">
+                  <Th width={86} top={31} align="right" title="Só o expediente (seg a sex, 7h às 19h), da abertura do chamado até a solução — ou até agora, se ainda está na fila. “d” são dias de expediente, de 12h.">
                     Tempo
                   </Th>
                   <Th width={260} top={31}>Observações</Th>

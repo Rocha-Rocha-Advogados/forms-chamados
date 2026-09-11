@@ -22,26 +22,80 @@ export const dayKey = (iso: string | Date) => DIA.format(new Date(iso))
 
 export const fmtDayLabel = (key: string) => `${key.slice(8, 10)}/${key.slice(5, 7)}`
 
-export const horasEntre = (from: string, to: string) =>
-  (new Date(to).getTime() - new Date(from).getTime()) / 36e5
+/** Expediente do escritório: o tempo de atendimento só corre aqui dentro. */
+export const ABERTURA = 7
+export const FECHAMENTO = 19
 
-export const fmtHoras = (h: number | null) => {
-  if (h == null || !Number.isFinite(h)) return '—'
-  if (h < 1) return `${Math.round(h * 60)} min`
-  if (h < 48) return `${h.toFixed(1)} h`
-  return `${(h / 24).toFixed(1)} d`
+const RELOGIO = new Intl.DateTimeFormat('en-CA', {
+  timeZone: FUSO,
+  hour12: false,
+  year: 'numeric',
+  month: '2-digit',
+  day: '2-digit',
+  hour: '2-digit',
+  minute: '2-digit',
+  second: '2-digit',
+})
+
+/**
+ * O instante lido como relógio de parede do escritório, devolvido em ms de
+ * UTC. Com isso a conta de expediente usa getUTC* e não depende do fuso de
+ * quem abre o painel — sem isso, um acesso de fora do Brasil mudaria o
+ * tempo dos chamados.
+ */
+const paredeNoEscritorio = (d: Date) => {
+  const p: Record<string, string> = {}
+  for (const parte of RELOGIO.formatToParts(d)) {
+    if (parte.type !== 'literal') p[parte.type] = parte.value
+  }
+  // en-CA devolve 24 para a meia-noite; UTC quer 0.
+  return Date.UTC(+p.year, +p.month - 1, +p.day, +p.hour % 24, +p.minute, +p.second)
 }
 
 /**
- * Coluna "Tempo" da fila: conta sempre da abertura do chamado — até a solução
- * quando ela foi registrada, até agora quando ainda está na fila. Resolvido
- * sem hora de solução (os registros migrados da planilha) mostra "—" em vez
- * de uma idade que cresce para sempre.
+ * Horas de expediente entre dois instantes: soma só os pedaços que caem de
+ * segunda a sexta, entre 7h e 19h. Chamado aberto às 18h e resolvido às 8h
+ * do dia seguinte conta 2h, não 14h. Feriado não é tratado — não existe
+ * calendário deles no sistema, então ele conta como dia normal.
+ */
+export const horasUteisEntre = (from: string, to: string) => {
+  const inicio = paredeNoEscritorio(new Date(from))
+  const fim = paredeNoEscritorio(new Date(to))
+  if (!(fim > inicio)) return 0
+
+  let total = 0
+  const dia = new Date(inicio)
+  dia.setUTCHours(0, 0, 0, 0)
+  while (dia.getTime() <= fim) {
+    const semana = dia.getUTCDay()
+    if (semana !== 0 && semana !== 6) {
+      const de = Math.max(inicio, dia.getTime() + ABERTURA * 36e5)
+      const ate = Math.min(fim, dia.getTime() + FECHAMENTO * 36e5)
+      if (ate > de) total += (ate - de) / 36e5
+    }
+    dia.setUTCDate(dia.getUTCDate() + 1)
+  }
+  return total
+}
+
+/** Horas de expediente por extenso — "d" são dias de expediente, de 12h. */
+export const fmtHoras = (h: number | null) => {
+  if (h == null || !Number.isFinite(h)) return '—'
+  if (h < 1) return `${Math.round(h * 60)} min`
+  if (h < 24) return `${h.toFixed(1)} h`
+  return `${(h / (FECHAMENTO - ABERTURA)).toFixed(1)} d`
+}
+
+/**
+ * Coluna "Tempo" da fila: conta o expediente desde a abertura do chamado —
+ * até a solução quando ela foi registrada, até agora quando ainda está na
+ * fila. Resolvido sem hora de solução (os registros migrados da planilha)
+ * mostra "—" em vez de uma idade que cresce para sempre.
  */
 export const tempoDoChamado = (c: { created_at: string; resolvido: boolean; resolvido_em: string | null }) => {
-  if (c.resolvido_em) return fmtHoras(horasEntre(c.created_at, c.resolvido_em))
+  if (c.resolvido_em) return fmtHoras(horasUteisEntre(c.created_at, c.resolvido_em))
   if (c.resolvido) return '—'
-  return fmtHoras(horasEntre(c.created_at, new Date().toISOString()))
+  return fmtHoras(horasUteisEntre(c.created_at, new Date().toISOString()))
 }
 
 export const pct = (part: number, total: number) => (total ? Math.round((part / total) * 100) : 0)
